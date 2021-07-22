@@ -1,12 +1,20 @@
+import * as CryptoJS from "crypto-js"
+
 class Block {
     public index:number;
     public hash:string;
     public previousHash:string;
     public data: string;
     public timestamp: number;
+
+    // Class가 생성되지 않아도 사용할 수 있는 메소드
+    // return 값은 string
+    static calculateBlockHash = (index:number, previousHash:string, timestamp: number, data: string) :string =>
+     CryptoJS.SHA256(index + previousHash + timestamp + data).toString()
+
     constructor(
         index:number,
-        hash:string,
+        hash:string, 
         previousHash:string,
         data: string,
         timestamp: number,
@@ -21,10 +29,14 @@ class Block {
 
 const genesisBlock:Block = new Block(0, "2020202020202", "", "Hello", 123456)
 
-let blockchain: [Block] = [genesisBlock]
-
+// 배열이자 Block 형태로 = [genesisBlock]을 담겠다..
+let blockchain: Block[] = [genesisBlock]
 // blockchain.push("stuff") <- Block이 아니니 추가가 되지 않는다.
 
-console.log(blockchain)
+const getBlockChain = () : Block[] => blockchain // 블록 배열 - 블록체인의 길이 확인
+
+const getLatestBlock = () : Block => blockchain[blockchain.length - 1] // 블록 - 가장 최근의 블록체인 가져오기
+
+const getNewTimeStamp = () : number => Math.round(new Date().getTime() / 100)
 
 export {}
